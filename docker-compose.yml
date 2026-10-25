@@ -1,0 +1,13 @@
+services:
+  portfolio-postgres:
+    image: postgres:16
+    container_name: netiks-portfolio-db
+    ports:
+      - "5433:5432"
+    volumes:
+      - portfolio_pgdata:/var/lib/postgresql/data
+      - ./portfolio-1-database-design/01-existing-schema.sql:/docker-entrypoint-initdb.d/01-existing-schema.sql
+      - ./portfolio-1-database-design/02-improved-module.sql:/docker-entrypoint-initdb.d/02-improved-module.sql
+
+volumes:
+  portfolio_pgdata:
