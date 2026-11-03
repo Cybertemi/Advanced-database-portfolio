@@ -8,6 +8,39 @@ services:
       - portfolio_pgdata:/var/lib/postgresql/data
       - ./portfolio-1-database-design/01-existing-schema.sql:/docker-entrypoint-initdb.d/01-existing-schema.sql
       - ./portfolio-1-database-design/02-improved-module.sql:/docker-entrypoint-initdb.d/02-improved-module.sql
+  portfolio-mongo:
+    image: mongo:7
+    container_name: netiks-portfolio-mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - portfolio_mongodata:/data/db
+
+  portfolio-replica:
+    image: postgres:16
+    container_name: netiks-portfolio-replica
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGPASSWORD: ${REPLICATION_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - portfolio_replicadata:/var/lib/postgresql/data
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        if [ ! -s /var/lib/postgresql/data/PG_VERSION ]; then
+          until pg_isready -h portfolio-postgres; do sleep 2; done
+          pg_basebackup -h portfolio-postgres -U replicator -D /var/lib/postgresql/data -Fp -Xs -P -R
+          chmod 700 /var/lib/postgresql/data
+        fi
+        exec docker-entrypoint.sh postgres
 
 volumes:
   portfolio_pgdata:
+  portfolio_mongodata: 
+  portfolio_replicadata:
+  

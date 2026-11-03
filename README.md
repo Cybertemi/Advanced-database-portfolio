@@ -35,3 +35,14 @@ Netiks store carries out and supports the folowing operations:
 4. Place an order and deduct stock
 5. Process payment and update order status
 6. Generate vendor sales reports and admin audit queries
+
+## AI Use Declaration
+- **Tool used:** Claude (Anthropic).
+- **Used for:** explaining database concepts (normalisation, execution plans, transactions,
+  document models, replication), drafting SQL and shell scripts, structuring README files,
+  and helping debug Docker and configuration errors.
+- **How I verified it:** I ran every script and query myself in my own PostgreSQL, MongoDB
+  and Docker environment and took my own screenshots. I compared the execution plans with
+  my measurements, corrected the AI where my results differed (for example the baseline
+  timings in Portfolio 2), rewrote the explanations in my own words, and can explain each
+  design decision.
